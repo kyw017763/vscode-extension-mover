@@ -1,27 +1,81 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as cp from 'child_process';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  console.log('Congratulations, your extension "extension-mover" is now active!');
+  
+  let disposable = vscode.commands.registerCommand('extension.mover', async () => {
+    
+    const osObj = {
+      macOS: `~/.vscode/extensions`,
+      Windows: `%USERPROFILE%\.vscode\extensions`,
+      Linux: `~/.vscode/extensions`,
+    };
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "extension-mover" is now active!');
+    const optionArr: string[] = [];
+    for (const os in osObj) {
+      optionArr.push(os);
+    }
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.mover', () => {
-		// The code you place here will be executed every time your command is executed
+    // 1. Select your OS
+    const osOption = await vscode.window.showQuickPick(optionArr, {
+      placeHolder: 'Select your OS',
+      ignoreFocusOut: true,
+    });
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello, It\'s Extension Mover!');
-	});
+    if (!osOption) {
+      vscode.window.showErrorMessage('Execution aborted');
+      return ;
+    }
 
-	context.subscriptions.push(disposable);
+    // 2. Input file name you want
+    const fileNameInput = await vscode.window.showInputBox({
+      value: 'extension-mover',
+      placeHolder: "Input file name you want",
+      validateInput: function (input: string): null | string {
+        return (/^[a-z0-9_.@()-]+/i).test(input) ? null : `The name of the txt file can't be that!`;
+      },
+      ignoreFocusOut: true,
+    });
+
+    if (!fileNameInput) {
+      vscode.window.showErrorMessage('Execution aborted');
+      return ;
+    }
+
+    // 3. Select save dir
+    const saveDirOption: vscode.OpenDialogOptions = {
+      openLabel: 'Save in this directory',
+      canSelectFiles: false,
+      canSelectFolders: true
+    };
+
+    let saveDir;
+
+    await vscode.window.showOpenDialog(saveDirOption).then(fileUri => {
+      if (fileUri && fileUri[0]) {
+        saveDir = fileUri[0].fsPath;
+        fs.writeFile(path.resolve(fileUri[0].fsPath, fileNameInput+'.txt'), '', 'UTF-8', (err) => {
+          if (err) {
+            return;
+          } else {
+            vscode.window.showInformationMessage('Hello, It\'s Extension Mover!');
+          }
+        });
+      } else {
+        vscode.window.showErrorMessage('Execution aborted');
+        return ;
+      }
+    });
+
+    console.log(optionArr);
+    console.log(osOption);
+    console.log(fileNameInput);
+    console.log(saveDir);
+  });
+  context.subscriptions.push(disposable);
 }
-
-// this method is called when your extension is deactivated
 export function deactivate() {}
