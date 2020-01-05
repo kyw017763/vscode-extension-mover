@@ -1,5 +1,5 @@
 import * as cp from 'child_process';
-import * as fs from 'fs';
+import * as fs from 'graceful-fs';
 import * as os from 'os';
 
 cp.exec('code --list-extensions', (err, stdout, stderr) => {
