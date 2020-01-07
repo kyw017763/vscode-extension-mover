@@ -41,10 +41,23 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     // 3. Choose file vs copy-paste
-    
+    const commandArr = ['Save as text file', 'Copy'];
+    const commandOption = await vscode.window.showQuickPick(commandArr, {
+      placeHolder: 'Select ',
+      ignoreFocusOut: true,
+    });
+
+    if (!commandOption) {
+      vscode.window.showErrorMessage('Execution aborted');
+      return;
+    }
+
     // 4. and...
-    saveAsFile(extensionData, extensionCnt);
-    copy(extensionData, extensionCnt);
+    if (commandOption === commandArr[0]) {
+      saveAsFile(extensionData, extensionCnt);
+    } else {
+      copy(extensionData, extensionCnt);
+    }
   });
 
   context.subscriptions.push(disposable);
