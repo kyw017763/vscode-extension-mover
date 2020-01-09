@@ -10,14 +10,19 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.mover"
+    "onCommand:extension.exporter",
+    "onCommand:extension.importer"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.mover",
-				"title": "Create txt file has extension install command for moving"
+				"command": "extension.exporter",
+        "title": "Extension Mover: export extensions"
+      },
+      {
+				"command": "extension.importer",
+        "title": "Extension Mover: import extensions"
 			}
 		]
 	},

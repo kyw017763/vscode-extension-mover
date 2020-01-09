@@ -5,11 +5,12 @@ import optionArr from './osObj';
 import saveAsFile from './saveAsFileExtensions';
 import copy from './copyExtensions';
 import getExtList from './getExtList';
+import setExtList from './setExtList';
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "extension-mover" is now active!');
 
-  let disposable = vscode.commands.registerCommand('extension.mover', async () => {
+  let exporter = vscode.commands.registerCommand('extension.exporter', async () => {
 
     // 1. Select your OS
     const osOption = await vscode.window.showQuickPick(optionArr, {
@@ -22,7 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
 
-    // 2. Make txt file's content
+    // 2. Get extension list
     let extensionList: any = '';
     let extensionCnt: number = 0;
 
@@ -64,6 +65,22 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  context.subscriptions.push(disposable);
+  let importer = vscode.commands.registerCommand('extension.importer', async () => {
+    
+    const osOption = await vscode.window.showQuickPick(optionArr, {
+      placeHolder: 'Select your OS',
+      ignoreFocusOut: true,
+    });
+
+    if (!osOption) {
+      vscode.window.showErrorMessage('Execution aborted');
+      return;
+    }
+
+    setExtList(osOption);
+  });
+
+  context.subscriptions.push(exporter);
+  context.subscriptions.push(importer);
 }
 export function deactivate() {}
