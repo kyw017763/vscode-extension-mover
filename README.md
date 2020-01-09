@@ -17,5 +17,4 @@ you could use this function.
 But if you don't want to do this, copy txt file's content and paste to your command line and execute.
 
 ## Extension Settings
-Only do this  
-[vscode official instruction](https://code.visualstudio.com/docs/setup/mac)
+[vscode official instruction - macOS](https://code.visualstudio.com/docs/setup/mac)
