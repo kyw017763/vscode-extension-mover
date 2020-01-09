@@ -5,6 +5,7 @@ import * as path from 'path';
 
 import saveAsFile from './saveAsFileExtensions';
 import copy from './copyExtensions';
+import getExtList from './getExtList';
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "extension-mover" is now active!');
@@ -31,14 +32,29 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     // 2. Make txt file's content
-    let extensionData: string = '';
+    let extensionList: any = '';
     let extensionCnt: number = 0;
 
-    // code --list-extensions
-    fs.readdirSync(path.resolve(osObj[osOption]), {}).forEach((elem: any) => {
-      extensionData += `code --install-extension ${elem}${os.EOL}`;
-      extensionCnt++;
+    // if OS === Windows
+    extensionList = await getExtList();
+    if (!extensionList) {
+      vscode.window.showErrorMessage('Execution aborted');
+      return;
+    }
+
+    extensionList = extensionList.split('\n');
+    extensionList = extensionList.slice(0, extensionList.length -1);
+    extensionCnt = extensionList.length;
+
+    let extensionListResult = '';
+    extensionList.forEach((elem: any) => {
+      extensionListResult += `code --install-extension ${elem}${os.EOL}`;
     });
+
+    // fs.readdirSync(path.resolve(osObj[osOption]), {}).forEach((elem: any) => {
+    //   extensionListResult += `code --install-extension ${elem}${os.EOL}`;
+    //   extensionCnt++;
+    // });
 
     // 3. Choose file vs copy-paste
     const commandArr = ['Save as text file', 'Copy'];
@@ -54,9 +70,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     // 4. and...
     if (commandOption === commandArr[0]) {
-      saveAsFile(extensionData, extensionCnt);
+      saveAsFile(extensionListResult, extensionCnt);
+    } else if (commandOption === commandArr[1]) {
+      copy(extensionListResult, extensionCnt);
     } else {
-      copy(extensionData, extensionCnt);
+      vscode.window.showErrorMessage('Execution aborted');
+      return;
     }
   });
 
