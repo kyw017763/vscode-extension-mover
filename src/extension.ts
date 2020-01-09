@@ -1,8 +1,7 @@
 import * as vscode from 'vscode';
-import * as fs from 'graceful-fs';
 import * as os from 'os';
-import * as path from 'path';
 
+import optionArr from './osObj';
 import saveAsFile from './saveAsFileExtensions';
 import copy from './copyExtensions';
 import getExtList from './getExtList';
@@ -11,14 +10,6 @@ export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "extension-mover" is now active!');
 
   let disposable = vscode.commands.registerCommand('extension.mover', async () => {
-
-    const osObj: any = {
-      macOS: `~/.vscode/extensions`,
-      Windows: path.resolve(`${process.env.USERPROFILE}`, '.vscode', 'extensions'),
-      Linux: `~/.vscode/extensions`,
-    };
-
-    const optionArr: string[] = Object.keys(osObj);
 
     // 1. Select your OS
     const osOption = await vscode.window.showQuickPick(optionArr, {
@@ -35,8 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
     let extensionList: any = '';
     let extensionCnt: number = 0;
 
-    // if OS === Windows
-    extensionList = await getExtList();
+    extensionList = await getExtList(osOption);
     if (!extensionList) {
       vscode.window.showErrorMessage('Execution aborted');
       return;
@@ -51,15 +41,10 @@ export function activate(context: vscode.ExtensionContext) {
       extensionListResult += `code --install-extension ${elem}${os.EOL}`;
     });
 
-    // fs.readdirSync(path.resolve(osObj[osOption]), {}).forEach((elem: any) => {
-    //   extensionListResult += `code --install-extension ${elem}${os.EOL}`;
-    //   extensionCnt++;
-    // });
-
     // 3. Choose file vs copy-paste
     const commandArr = ['Save as text file', 'Copy'];
     const commandOption = await vscode.window.showQuickPick(commandArr, {
-      placeHolder: 'Select ',
+      placeHolder: 'Choose the way get commands',
       ignoreFocusOut: true,
     });
 
