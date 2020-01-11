@@ -18,7 +18,7 @@ export default async (extensionList: string, extensionCnt: number) => {
     return;
   }
 
-  // 4. Select save dir
+  // 5. Select save dir
   const saveDirOption: vscode.OpenDialogOptions = {
     openLabel: 'Save in this directory',
     canSelectFiles: false,

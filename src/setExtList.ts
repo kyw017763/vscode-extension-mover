@@ -52,7 +52,7 @@ export default (async (osOption: string) => {
     });
   } else {
     extensionList.forEach(async (e: string) => {
-      extensionListResult = await cpPromise.exec(`sh ${e}`)
+      extensionListResult = await cpPromise.exec(`${e}`)
         .then(function (result) {
           if (result.stderr) {
             return false;

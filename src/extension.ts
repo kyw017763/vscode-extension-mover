@@ -2,10 +2,11 @@ import * as vscode from 'vscode';
 import * as os from 'os';
 
 import optionArr from './osObj';
-import saveAsFile from './saveAsFileExtensions';
-import copy from './copyExtensions';
+import saveAsFileExtList from './saveAsFileExtensions';
+import copyExtList from './copyExtensions';
 import getExtList from './getExtList';
 import setExtList from './setExtList';
+import uninstallExt from './uninstallExtentions';
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "extension-mover" is now active!');
@@ -56,12 +57,30 @@ export function activate(context: vscode.ExtensionContext) {
 
     // 4. and...
     if (commandOption === commandArr[0]) {
-      saveAsFile(extensionListResult, extensionCnt);
+      await saveAsFileExtList(extensionListResult, extensionCnt);
     } else if (commandOption === commandArr[1]) {
-      copy(extensionListResult, extensionCnt);
+      await copyExtList(extensionListResult, extensionCnt);
     } else {
       vscode.window.showErrorMessage('Execution aborted');
       return;
+    }
+
+    const uninstallArr = ['Yes', 'No'];
+    const uninstallOption = await vscode.window.showQuickPick(uninstallArr, {
+      placeHolder: 'Do you want to uninstall your all extensions?',
+      ignoreFocusOut: true,
+    });
+
+    if (!uninstallOption || uninstallOption === uninstallArr[1]) {
+      vscode.window.showWarningMessage('No extensions uninstalled!');
+      return ;
+    } else {
+      let uninstallResult = await uninstallExt(osOption, extensionList);
+      if (uninstallResult) {
+        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension uninstalled!`);
+      } else {
+        vscode.window.showWarningMessage('Uninstall execution aborted');
+      }
     }
   });
 
@@ -77,7 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
 
-    setExtList(osOption);
+    await setExtList(osOption);
   });
 
   context.subscriptions.push(exporter);
