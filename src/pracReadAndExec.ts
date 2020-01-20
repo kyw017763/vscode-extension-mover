@@ -7,7 +7,7 @@ fs.readFile('./extension-mover.txt', {encoding: 'UTF-8'}, (err, data) => {
       console.log('There\'s no text file!');
   } else {
       console.log(data);
-      let extensionArr = data.split(os.EOL);
+      let extensionArr: string[] = data.split(os.EOL);
       extensionArr.forEach(e => {
           cp.exec(`code --install-extension ${e}`, (err, stdout, stderr) => { });
       });

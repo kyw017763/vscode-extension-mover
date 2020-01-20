@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
     extensionCnt = extensionList.length;
 
     let extensionListResult = '';
-    extensionList.forEach((elem: any) => {
+    extensionList.forEach((elem: string) => {
       extensionListResult += `code --install-extension ${elem}${os.EOL}`;
     });
 

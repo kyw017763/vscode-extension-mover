@@ -5,13 +5,13 @@ import * as os from 'os';
 cp.exec('code --list-extensions', (err, stdout, stderr) => {
     if(err) return;
 
-    let extensionArr = stdout.split('\n');
+    let extensionArr: string[] = stdout.split('\n');
     console.log(stdout);
     extensionArr = extensionArr.slice(0, extensionArr.length -1);
     console.log(stdout);
 
-    let w = '';
-    let i = 0;
+    let w: string = '';
+    let i: number = 0;
 
     extensionArr.forEach(e => {
         i++;
@@ -21,6 +21,8 @@ cp.exec('code --list-extensions', (err, stdout, stderr) => {
 
     if(i > 0) {
         fs.writeFile('extension-mover.txt', w, 'UTF-8', (err) => {
+
+          
             if(err) return;
             else console.log('Making extension-mover Text File!');
         });
