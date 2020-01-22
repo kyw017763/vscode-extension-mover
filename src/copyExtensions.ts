@@ -6,24 +6,36 @@ export default async (extensionList: string, extensionCnt: number) => {
   // 4. Copy extensions install command
   let copyExtensionList = '';
   extensionList.split(os.EOL).forEach((elem: string) => {
-    copyExtensionList += elem.replace(os.EOL, '`r`');
+    copyExtensionList += elem.replace(os.EOL, '{0}');
   });
-  console.log(extensionList);
+  
   console.log(copyExtensionList);
   
-  return await cpPromise.exec('powershell Set-Clipboard -V "'+ copyExtensionList +'"')
-    .then(function (result) {
-      if (result.stderr) {
-        console.log('실패');
+  return await cpPromise.exec("powershell $str = '" + copyExtensionList + "' -f [System.Environment]::NewLine")
+    .then(async function (setResult) {
+      if (setResult.stderr) {
+        vscode.window.showErrorMessage('Execution aborted111');
         return false;
-      } else if (result.stdout) {
-        console.log('성공');
-        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are copied!`);
-        return true;
       }
+      console.log(setResult.stdout);
+      return await cpPromise.exec('powershell Set-Clipboard -Value $str')
+        .then(function (result) {
+          if (result.stderr) {
+            vscode.window.showErrorMessage('Execution aborted222');
+            return false;
+          }
+
+          console.log(result.stdout);
+          vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are copied!`);
+          return true;
+        })
+        .catch((err) => {
+          vscode.window.showErrorMessage('Execution aborted333'+err);
+          return false;
+        });
     })
-    .catch(function (err) {
-      console.log('아예 에러'+err);
+    .catch((err) => {
+      vscode.window.showErrorMessage('Execution aborted444'+err);
       return false;
     });
 };
