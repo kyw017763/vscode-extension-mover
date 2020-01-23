@@ -4,38 +4,34 @@ import * as os from 'os';
 
 export default async (extensionList: string, extensionCnt: number) => {
   // 4. Copy extensions install command
-  let copyExtensionList = '';
-  extensionList.split(os.EOL).forEach((elem: string) => {
-    copyExtensionList += elem.replace(os.EOL, '{0}');
-  });
-  
-  console.log(copyExtensionList);
-  
-  return await cpPromise.exec("powershell $str = '" + copyExtensionList + "' -f [System.Environment]::NewLine")
+  let preResult = await cpPromise.exec('powershell Set-Clipboard -Value "`r`n"')
     .then(async function (setResult) {
       if (setResult.stderr) {
-        vscode.window.showErrorMessage('Execution aborted111');
-        return false;
+        throw new Error();
       }
-      console.log(setResult.stdout);
-      return await cpPromise.exec('powershell Set-Clipboard -Value $str')
-        .then(function (result) {
-          if (result.stderr) {
-            vscode.window.showErrorMessage('Execution aborted222');
-            return false;
-          }
-
-          console.log(result.stdout);
-          vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are copied!`);
-          return true;
-        })
-        .catch((err) => {
-          vscode.window.showErrorMessage('Execution aborted333'+err);
-          return false;
-        });
+      return true;
     })
     .catch((err) => {
-      vscode.window.showErrorMessage('Execution aborted444'+err);
+      vscode.window.showErrorMessage('Execution aborted');
       return false;
     });
+  
+  if (preResult) {
+    extensionList.split(os.EOL).forEach(async (elem: string) => {
+      await cpPromise.exec('powershell Set-Clipboard -Value "' + elem + '" -Append')
+      .then(async function (setResult) {
+        if (setResult.stderr) {
+          throw new Error();
+        }
+        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are copied!`);
+        return true;
+      })
+      .catch((err) => {
+        vscode.window.showErrorMessage('Execution aborted');
+        return false;
+      });
+    });
+  } else {
+    vscode.window.showErrorMessage('Execution aborted');
+  }
 };

@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as cpPromise from 'child-process-promise';
 
-import optionArr from './osObj';
+import { osArr } from './osObj';
 
 export default (async (osOption: string) => {
 
@@ -36,7 +36,7 @@ export default (async (osOption: string) => {
 
   let extensionListResult;
 
-  if (osOption === optionArr[1]) {
+  if (osOption.includes((osArr[2]))) {
     extensionList.forEach(async (e: string) => {
       extensionListResult = await cpPromise.exec(`powershell ${e}`)
         .then(function (result) {

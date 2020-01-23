@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import * as os from 'os';
+import osName from 'os-name';
 
-import optionArr from './osObj';
+import { osArr } from './osObj';
 import saveAsFileExtList from './saveAsFileExtensions';
 import copyExtList from './copyExtensions';
 import getExtList from './getExtList';
@@ -13,16 +14,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   let exporter = vscode.commands.registerCommand('extension.exporter', async () => {
 
-    // 1. Select your OS
-    const osOption = await vscode.window.showQuickPick(optionArr, {
-      placeHolder: 'Select your OS',
-      ignoreFocusOut: true,
-    });
-
-    if (!osOption) {
-      vscode.window.showErrorMessage('Execution aborted');
-      return;
-    }
+    // 1. Get os name
+    const osOption:string = osName();
 
     // 2. Get extension list
     let extensionList: any = '';
@@ -43,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
       extensionListResult += `code --install-extension ${elem}${os.EOL}`;
     });
 
-    // 3. Choose file vs copy-paste
+    // 3. Choose file or Copy
     const commandArr = ['Save as text file', 'Copy'];
     const commandOption = await vscode.window.showQuickPick(commandArr, {
       placeHolder: 'Choose the way get commands',
@@ -58,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
     // 4. and...
     if (commandOption === commandArr[0]) {
       await saveAsFileExtList(extensionListResult, extensionCnt);
-    } else if (commandOption === commandArr[1]) {
+    } else if (commandOption === commandArr[0]) {
       await copyExtList(extensionListResult, extensionCnt);
     } else {
       vscode.window.showErrorMessage('Execution aborted');
@@ -71,7 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
       ignoreFocusOut: true,
     });
 
-    if (!uninstallOption || uninstallOption === uninstallArr[1]) {
+    if (!uninstallOption || uninstallOption === uninstallArr[0]) {
       vscode.window.showWarningMessage('No extensions uninstalled!');
       return ;
     } else {
@@ -85,21 +78,13 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   let importer = vscode.commands.registerCommand('extension.importer', async () => {
-    
-    const osOption = await vscode.window.showQuickPick(optionArr, {
-      placeHolder: 'Select your OS',
-      ignoreFocusOut: true,
-    });
-
-    if (!osOption) {
-      vscode.window.showErrorMessage('Execution aborted');
-      return;
-    }
-
+    // 1. Get os name
+    const osOption:string = osName();
     await setExtList(osOption);
   });
 
   context.subscriptions.push(exporter);
   context.subscriptions.push(importer);
 }
+
 export function deactivate() {}

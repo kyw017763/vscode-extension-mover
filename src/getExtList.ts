@@ -1,9 +1,9 @@
 import * as cpPromise from 'child-process-promise';
 
-import optionArr from './osObj';
+import { osArr } from './osObj';
 
 export default (async (osOption: string) => {
-  if (osOption === optionArr[1]) {
+  if (osOption.includes((osArr[2]))) {
     return await cpPromise.exec('powershell code --list-extensions')
     .then(function (result) {
       if (result.stderr) {
