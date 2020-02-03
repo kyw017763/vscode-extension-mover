@@ -8,4 +8,4 @@ const osObj = {
 
 const osArr = Object.keys(osObj);
 
-export { osObj, osArr };
+export { osArr };

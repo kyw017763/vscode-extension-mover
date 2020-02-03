@@ -14,8 +14,7 @@ export default async (extensionList: string, extensionCnt: number) => {
   });
 
   if (!fileNameInput) {
-    vscode.window.showErrorMessage('Execution aborted');
-    return;
+    return false;
   }
 
   // 5. Select save dir
@@ -29,15 +28,13 @@ export default async (extensionList: string, extensionCnt: number) => {
     if (fileUri && fileUri[0]) {
       fs.writeFile(path.resolve(fileUri[0].fsPath, fileNameInput + '.txt'), extensionList, 'UTF-8', (err) => {
         if (err) {
-          vscode.window.showErrorMessage('Execution aborted');
-          return;
+          return false;
         } else {
-          vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are saved!`);
+          return true;
         }
       });
     } else {
-      vscode.window.showErrorMessage('Execution aborted');
-      return;
+      return false;
     }
   });
 };

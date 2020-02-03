@@ -22,53 +22,36 @@ export default (async (osOption: string) => {
       if (fileUri && fileUri[0]) {
         return fs.readFileSync(path.resolve(fileUri[0].fsPath), 'UTF-8');
       } else {
-        return null;
+        return 0;
       }
     });
 
   if (!extensionList) {
-    vscode.window.showErrorMessage('Execution aborted');
-    return;
+    return 0;
   }
+
   extensionList = extensionList.split(os.EOL);
   extensionList = extensionList.slice(0, extensionList.length -1);
-  const extensionCnt = extensionList.length;
 
-  let extensionListResult;
-
+  let command: string;
   if (osOption.includes((osArr[2]))) {
-    extensionList.forEach(async (e: string) => {
-      extensionListResult = await cpPromise.exec(`powershell ${e}`)
-        .then(function (result) {
-          if (result.stderr) {
-            return false;
-          } else {
-            return true;
-          }
-        })
-        .catch(function (err) {
-          return false;
-        });
-    });
+    command = `powershell $e$`;
   } else {
-    extensionList.forEach(async (e: string) => {
-      extensionListResult = await cpPromise.exec(`${e}`)
-        .then(function (result) {
-          if (result.stderr) {
-            return false;
-          } else {
-            return true;
-          }
-        })
-        .catch(function (err) {
-          return false;
-        });
-    });
+    command = `$e$`;
   }
 
-  if (extensionListResult) {
-    vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n ${extensionCnt} extensions are installed!`);
-  } else {
-    vscode.window.showErrorMessage('Execution aborted');
-  }
+  extensionList.forEach(async (e: string) => {
+    command = command.replace('$e$', e);
+    await cpPromise.exec(command)
+      .then(function (result) {
+        if (result.stderr) {
+          return 0;
+        } else {
+          return extensionList.length;
+        }
+      })
+      .catch(function (err) {
+        return 0;
+      });
+  });
 });
