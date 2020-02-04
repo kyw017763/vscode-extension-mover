@@ -8,8 +8,8 @@ Simple vscode extension for vscode extension synchronization
 ### Create txt file has extension install command
 This txt file's name is editable by user (default name is `extension-mover.txt`).
 
-### Uninstall existing extensions
-This function is for users who move their development environment permanently.
+### Copy extension install command
+Just paste it somewhere, press ctrl + j in the new vscode, and then paste it.
 
 ### Install extensions automatically with txt file made by vscode-extension-mover
 If you would bear to install again vscode-extension-mover on you new development environment,

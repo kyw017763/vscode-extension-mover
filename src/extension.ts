@@ -7,7 +7,6 @@ import saveAsFileExtList from './saveAsFileExtensions';
 import copyExtList from './copyExtensions';
 import getExtList from './getExtList';
 import setExtList from './setExtList';
-import uninstallExt from './uninstallExtentions';
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "extension-mover" is now active!');
@@ -53,36 +52,20 @@ export function activate(context: vscode.ExtensionContext) {
     let exportResult: boolean | undefined;
     if (commandOption === commandArr[0]) {
       exportResult = await saveAsFileExtList(extensionListResult, extensionCnt);
+      if (exportResult) {
+        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are saved!`);
+      } else {
+        vscode.window.showErrorMessage('Export execution aborted');
+        return ;
+      }
     } else if (commandOption === commandArr[1]) {
       exportResult = await copyExtList(osOption, extensionListResult, extensionCnt);
-    }
-
-    if (exportResult) {
-      vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are saved!`);
-      vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are copied!`);
-    } else {
-      vscode.window.showErrorMessage('Export execution aborted');
-      return ;
-    }
-
-    const uninstallArr: string[] = ['Yes', 'No'];
-    const uninstallOption = await vscode.window.showQuickPick(uninstallArr, {
-      placeHolder: 'Do you want to uninstall your all extensions?',
-      ignoreFocusOut: true,
-    });
-
-    let uninstallResult: boolean | undefined;
-
-    if (!uninstallOption || uninstallOption === uninstallArr[0]) {
-      vscode.window.showWarningMessage('No extensions uninstalled!');
-    } else {
-      uninstallResult = await uninstallExt(osOption, extensionListArr);
-    }
-
-    if (uninstallResult) {
-      vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension uninstalled!`);
-    } else {
-      vscode.window.showWarningMessage('Uninstall execution aborted');
+      if (exportResult) {
+        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are copied!`);
+      } else {
+        vscode.window.showErrorMessage('Export execution aborted');
+        return ;
+      }
     }
   });
 
