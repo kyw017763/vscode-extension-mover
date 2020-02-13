@@ -6,7 +6,6 @@ import { osArr } from './osObj';
 import saveAsFileExtList from './saveAsFileExtensions';
 import copyExtList from './copyExtensions';
 import getExtList from './getExtList';
-import setExtList from './setExtList';
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "extension-mover" is now active!');
@@ -69,20 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  let importer = vscode.commands.registerCommand('extension.importer', async () => {
-    // 1. Get os name
-    const osOption: string = osName();
-
-    let result: number | undefined = await setExtList(osOption);
-    if (result) {
-      vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n ${result} extensions are installed!`);
-    } else {
-      vscode.window.showWarningMessage('Import execution aborted');
-    }
-  });
-
   context.subscriptions.push(exporter);
-  context.subscriptions.push(importer);
 }
 
 export function deactivate() {}
