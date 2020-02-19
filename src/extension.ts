@@ -2,14 +2,11 @@ import * as vscode from 'vscode';
 import * as os from 'os';
 import osName from 'os-name';
 
-import { osArr } from './osObj';
-import saveAsFileExtList from './saveAsFileExtensions';
+import saveExtListAsFile from './saveExtensionsAsFile';
 import copyExtList from './copyExtensions';
-import getExtList from './getExtList';
+import getExtList from './getExtensionsList';
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "extension-mover" is now active!');
-
   let exporter = vscode.commands.registerCommand('extension.exporter', async () => {
 
     // 1. Get os name
@@ -30,9 +27,9 @@ export function activate(context: vscode.ExtensionContext) {
     extensionListArr = extensionListArr.slice(0, extensionListArr.length -1);
     extensionCnt = extensionListArr.length;
 
-    let extensionListResult: string = '';
+    const extensionListResult: string[] = [];
     extensionListArr.forEach((elem: string) => {
-      extensionListResult += `code --install-extension ${elem}${os.EOL}`;
+      extensionListResult.push(`code --install-extension ${elem}${os.EOL}`);
     });
 
     // 3. Choose file or Copy
@@ -50,17 +47,17 @@ export function activate(context: vscode.ExtensionContext) {
     // 4. and...
     let exportResult: boolean | undefined;
     if (commandOption === commandArr[0]) {
-      exportResult = await saveAsFileExtList(extensionListResult, extensionCnt);
+      exportResult = await saveExtListAsFile(extensionListResult, extensionCnt);
       if (exportResult) {
-        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are saved!`);
+        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover! ${extensionCnt} extension install command are saved!`);
       } else {
         vscode.window.showErrorMessage('Export execution aborted');
         return ;
       }
     } else if (commandOption === commandArr[1]) {
-      exportResult = await copyExtList(osOption, extensionListResult, extensionCnt);
+      exportResult = await copyExtList(osOption, extensionListResult);
       if (exportResult) {
-        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover!\r\n${extensionCnt} extension install command are copied!`);
+        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover! ${extensionCnt} extension install command are copied!`);
       } else {
         vscode.window.showErrorMessage('Export execution aborted');
         return ;
