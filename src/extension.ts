@@ -1,40 +1,31 @@
 import * as vscode from 'vscode';
 import * as os from 'os';
 import osName from 'os-name';
-
+import getExtensionList from './getExtensionList';
 import saveExtensionListAsFile from './saveExtensionListAsFile';
 import copyExtensionList from './copyExtensionList';
-import getExtensionList from './getExtensionList';
 
 export function activate(context: vscode.ExtensionContext) {
   let exporter = vscode.commands.registerCommand('extension.exporter', async () => {
-
-    // 1. Get os name
     const osOption: string = osName();
 
-    // 2. Get extension list
-    let extensionListArr: string[] = [];
-    let extensionList: any = '';
-    let extensionCnt: number = 0;
-
-    extensionList = await getExtensionList(osOption);
-    if (!extensionList) {
+    let extensionListStr: string | null | undefined = await getExtensionList({ osOption });
+    if (!extensionListStr) {
       vscode.window.showErrorMessage('Execution aborted');
       return;
     }
 
-    extensionListArr = extensionList.split('\n');
+    let extensionListArr: string[] = extensionListStr.split('\n');
     extensionListArr = extensionListArr.slice(0, extensionListArr.length -1);
-    extensionCnt = extensionListArr.length;
+    const extensionCnt = extensionListArr.length;
 
-    const extensionListResult: string[] = [];
+    const commandList: string[] = [];
     extensionListArr.forEach((elem: string) => {
-      extensionListResult.push(`code --install-extension ${elem}${os.EOL}`);
+      commandList.push(`code --install-extension ${elem}${os.EOL}`);
     });
 
-    // 3. Choose file or Copy
-    const commandArr: string[] = ['Save as text file', 'Copy'];
-    const commandOption = await vscode.window.showQuickPick(commandArr, {
+    const commandOptions: string[] = ['Save as a file', 'Copy to clipboard'];
+    const commandOption = await vscode.window.showQuickPick(commandOptions, {
       placeHolder: 'Choose the way get commands',
       ignoreFocusOut: true,
     });
@@ -43,25 +34,23 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showErrorMessage('Execution aborted');
       return;
     }
+    
+    let exportResult: boolean | undefined = false;
+    let exportResultStr: string = '';
+    if (commandOption === commandOptions[0]) {
+      exportResult = await saveExtensionListAsFile({ commandList });
+      exportResultStr = 'saved';
+    } else if (commandOption === commandOptions[1]) {
+      exportResult = await copyExtensionList({ osOption, extensionList: extensionListArr });
+      exportResultStr = 'copied';
+    }
 
-    // 4. and...
-    let exportResult: boolean | undefined;
-    if (commandOption === commandArr[0]) {
-      exportResult = await saveExtensionListAsFile(extensionListResult, extensionCnt);
-      if (exportResult) {
-        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover! ${extensionCnt} extension install command are saved!`);
-      } else {
-        vscode.window.showErrorMessage('Export execution aborted');
-        return ;
-      }
-    } else if (commandOption === commandArr[1]) {
-      exportResult = await copyExtensionList(osOption, extensionListResult);
-      if (exportResult) {
-        vscode.window.showInformationMessage(`Hello, It\'s Extension Mover! ${extensionCnt} extension install command are copied!`);
-      } else {
-        vscode.window.showErrorMessage('Export execution aborted');
-        return ;
-      }
+    if (exportResult) {
+      vscode.window.showInformationMessage(`Hello, It\'s Extension Mover! ${extensionCnt} extension install commands are ${exportResultStr}!`);
+    }
+    else {
+      vscode.window.showErrorMessage('Export execution aborted');
+      return;
     }
   });
 

@@ -6,6 +6,4 @@ const osObj = {
   Windows: path.resolve(`${process.env.USERPROFILE}`, '.vscode', 'extensions'),
 };
 
-const osArr = Object.keys(osObj);
-
-export { osArr };
+export default Object.keys(osObj);

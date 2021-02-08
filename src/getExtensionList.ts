@@ -1,10 +1,12 @@
 import * as cpPromise from 'child-process-promise';
+import osType from './modules/osType';
+import { IGetParam } from './ts/IParam';
 
-import { osArr } from './osObj';
+export default (async (param: IGetParam): Promise<string | null | undefined> => {
+  const { osOption } = param;
 
-export default (async (osOption: string) => {
   let command: string;
-  if (osOption.includes((osArr[2]))) {
+  if (osOption.includes((osType[2]))) {
     command = 'powershell code --list-extensions';
   } else {
     command = 'code --list-extensions';
