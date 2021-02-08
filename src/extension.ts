@@ -9,8 +9,8 @@ export function activate(context: vscode.ExtensionContext) {
   let exporter = vscode.commands.registerCommand('extension.exporter', async () => {
     const osOption: string = osName();
 
-    let extensionListStr: string | null | undefined = await getExtensionList({ osOption });
-    if (!extensionListStr) {
+    let extensionListStr: string | boolean | undefined = await getExtensionList({ osOption });
+    if (!extensionListStr || typeof extensionListStr !== 'string') {
       vscode.window.showErrorMessage('Execution aborted');
       return;
     }
