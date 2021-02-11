@@ -1,21 +1,25 @@
-import { spawn, ChildProcessPromise, SpawnPromiseResult } from 'child-process-promise';
-import osType from './modules/osType';
-import { ICopyParam } from './ts/IParam';
+import { spawn } from 'child-process-promise';
+import pbcopy from './pbcopy';
+import osType from './osType';
+import { ICopyParam } from '../ts/IParam';
 
 export default async (param: ICopyParam): Promise<boolean> => {
   try {
     const { osOption, extensionList } = param;
 
-    let command: ChildProcessPromise<SpawnPromiseResult>;
+    let result: any = null;
     if (osOption.includes((osType[2]))) {
-      command = spawn('powershell', ['Set-Clipboard', '-Value', `"${extensionList.join('')}"`]);
+      result = await spawn('powershell', ['Set-Clipboard', '-Value', `"${extensionList.join('')}"`]);
     } else {
-      command = spawn('sh', ['-c', `echo "${extensionList.join('')}" | xclip`]);
+      result = await pbcopy(extensionList.join(''));
     }
   
-    return await command
-      .then(() => true)
-      .catch((err) => false);
+    if (result) {
+      return true;
+    }
+    else {
+      return false;
+    }
   } catch (err) {
     return false;
   }
