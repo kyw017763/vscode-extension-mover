@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
       exportResult = await saveExtensionListAsFile({ commandList });
       exportResultStr = 'saved';
     } else if (commandOption === commandOptions[1]) {
-      exportResult = await copyExtensionList({ osOption, extensionList: extensionListArr });
+      exportResult = await copyExtensionList({ osOption, commandList });
       exportResultStr = 'copied';
     }
 

@@ -1,6 +1,6 @@
 export interface ICopyParam {
     osOption: string;
-    extensionList: string[];
+    commandList: string[];
 }
 
 export interface IGetParam {

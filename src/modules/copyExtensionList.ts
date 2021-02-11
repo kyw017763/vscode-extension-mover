@@ -5,13 +5,13 @@ import { ICopyParam } from '../ts/IParam';
 
 export default async (param: ICopyParam): Promise<boolean> => {
   try {
-    const { osOption, extensionList } = param;
+    const { osOption, commandList } = param;
 
     let result: any = null;
     if (osOption.includes((osType[2]))) {
-      result = await spawn('powershell', ['Set-Clipboard', '-Value', `"${extensionList.join('')}"`]);
+      result = await spawn('powershell', ['Set-Clipboard', '-Value', `"${commandList.join('')}"`]);
     } else {
-      result = await pbcopy(extensionList.join(''));
+      result = await pbcopy(commandList.join(''));
     }
   
     if (result) {
