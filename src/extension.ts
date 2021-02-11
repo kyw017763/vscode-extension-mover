@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import * as os from 'os';
 import osName from 'os-name';
-import getExtensionList from './getExtensionList';
-import saveExtensionListAsFile from './saveExtensionListAsFile';
-import copyExtensionList from './copyExtensionList';
+import getExtensionList from './modules/getExtensionList';
+import saveExtensionListAsFile from './modules/saveExtensionListAsFile';
+import copyExtensionList from './modules/copyExtensionList';
 
 export function activate(context: vscode.ExtensionContext) {
   let exporter = vscode.commands.registerCommand('extension.exporter', async () => {
