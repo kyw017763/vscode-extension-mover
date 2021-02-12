@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import * as fs from 'graceful-fs';
 import * as path from 'path';
+import fsSync from '../modules/fsSync';
 import { ISaveParam } from '../ts/IParam';
 
 export default async (param: ISaveParam): Promise<boolean | undefined> => {
@@ -28,15 +28,8 @@ export default async (param: ISaveParam): Promise<boolean | undefined> => {
   
     const fileUri = await vscode.window.showOpenDialog(saveDirOption);
     if (fileUri && fileUri[0]) {
-      console.log(fileUri);
-      fs.writeFile(path.resolve(fileUri[0].fsPath, `${filename}.txt`), commandList.join(''), 'UTF-8', (err) => {
-        if (err) {
-          console.log(err);
-          return false;
-        } else {
-          return true;
-        }
-      });
+      await fsSync.WriteFileSync(path.resolve(fileUri[0].fsPath || fileUri[0].path, `${filename}.txt`), commandList.join(''), 'UTF-8');
+      return true;
     } else {
       return false;
     }

@@ -1,5 +1,5 @@
 import { spawn } from 'child-process-promise';
-import pbcopy from './pbcopy';
+import Pbcopy from './pbcopy';
 import osType from './osType';
 import { ICopyParam } from '../ts/IParam';
 
@@ -11,7 +11,7 @@ export default async (param: ICopyParam): Promise<boolean> => {
     if (osOption.includes((osType[2]))) {
       result = await spawn('powershell', ['Set-Clipboard', '-Value', `"${commandList.join('')}"`]);
     } else {
-      result = await pbcopy(commandList.join(''));
+      result = await Pbcopy(commandList.join(''));
     }
   
     if (result) {
