@@ -19,7 +19,7 @@
 		"commands": [
 			{
 				"command": "extension.exporter",
-				"title": "Extension Mover: export extensions"
+				"title": "Extension Mover: export all extensions (save as file or save to clipboard)"
 			},
 			{
 				"command": "extension.deletingHelper",
