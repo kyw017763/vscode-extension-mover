@@ -1,5 +1,5 @@
 import * as cpPromise from 'child-process-promise';
-import osType from './osType';
+import { osType } from './osType';
 import { IGetParam } from '../ts/IParam';
 
 export default (async (param: IGetParam): Promise<string | boolean | undefined> => {

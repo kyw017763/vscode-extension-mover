@@ -1,9 +1,10 @@
 import * as path from 'path';
 
 const osObj = {
-  macOS: `~/.vscode/extensions`,
-  Linux: `~/.vscode/extensions`,
-  Windows: path.resolve(`${process.env.USERPROFILE}`, '.vscode', 'extensions'),
+  macOS: path.resolve('~', '.vscode', 'extensions'),
+  Linux: path.resolve('~', '.vscode', 'extensions'),
+  Windows: path.resolve(`${process.env.USERPROFILE}`, '.vscode', 'extensions')
 };
 
-export default Object.keys(osObj);
+export default osObj;
+export const osType = Object.keys(osObj);

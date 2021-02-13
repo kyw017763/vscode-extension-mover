@@ -1,6 +1,6 @@
 import { spawn } from 'child-process-promise';
 import Pbcopy from './pbcopy';
-import osType from './osType';
+import { osType } from './osType';
 import { ICopyParam } from '../ts/IParam';
 
 export default async (param: ICopyParam): Promise<boolean> => {
