@@ -35,7 +35,6 @@ export default async (param: ISaveParam): Promise<boolean | undefined> => {
     }
   }
   catch (err) {
-    console.log(err);
     return false;
   }
 };
