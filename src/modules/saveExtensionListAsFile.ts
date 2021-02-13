@@ -5,7 +5,7 @@ import { ISaveParam } from '../ts/IParam';
 
 export default async (param: ISaveParam): Promise<boolean | undefined> => {
   try {
-    const { commandList } = param;
+    const { commands } = param;
 
     const filename = await vscode.window.showInputBox({
       value: 'extension-mover',
@@ -28,7 +28,7 @@ export default async (param: ISaveParam): Promise<boolean | undefined> => {
   
     const fileUri = await vscode.window.showOpenDialog(saveDirOption);
     if (fileUri && fileUri[0]) {
-      await fsSync.WriteFileSync(path.resolve(fileUri[0].fsPath || fileUri[0].path, `${filename}.txt`), commandList.join(''), 'UTF-8');
+      await fsSync.WriteFileSync(path.resolve(fileUri[0].fsPath || fileUri[0].path, `${filename}.txt`), commands, 'UTF-8');
       return true;
     } else {
       return false;

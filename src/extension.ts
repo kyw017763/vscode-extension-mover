@@ -38,10 +38,10 @@ export function activate(context: vscode.ExtensionContext) {
     let exportResult: boolean | undefined = false;
     let exportResultStr: string = '';
     if (commandOption === commandOptions[0]) {
-      exportResult = await saveExtensionListAsFile({ commandList });
+      exportResult = await saveExtensionListAsFile({ commands: commandList.join('') });
       exportResultStr = 'saved';
     } else if (commandOption === commandOptions[1]) {
-      exportResult = await copyExtensionList({ osOption, commandList });
+      exportResult = await copyExtensionList({ osOption, commands: commandList.join('') });
       exportResultStr = 'copied';
     }
 
