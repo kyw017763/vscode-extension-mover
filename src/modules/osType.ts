@@ -1,8 +1,9 @@
 import * as path from 'path';
+import IOsType from '../ts/IOsType';
 
-const osObj = {
-  macOS: path.resolve('~', '.vscode', 'extensions'),
-  Linux: path.resolve('~', '.vscode', 'extensions'),
+const osObj: IOsType = {
+  macOS: path.resolve(`${process.env.HOME}`, '.vscode', 'extensions'),
+  Linux: path.resolve(`${process.env.HOME}`, '.vscode', 'extensions'),
   Windows: path.resolve(`${process.env.USERPROFILE}`, '.vscode', 'extensions')
 };
 
