@@ -11,7 +11,7 @@
 	],
 	"activationEvents": [
 		"onCommand:extension.exporter",
-		"onCommand:extension.uninstaller"
+		"onCommand:extension.deletingHelper"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -21,8 +21,8 @@
 				"title": "Extension Mover: export extensions"
 			},
 			{
-				"command": "extension.uninstaller",
-				"title": "Extension Mover: uninstall extensions"
+				"command": "extension.deletingHelper",
+				"title": "Extension Mover: help deleting all extensions"
 			}
 		]
 	},

@@ -9,9 +9,9 @@ export default async (param: ISaveParam): Promise<boolean | undefined> => {
 
     const filename = await vscode.window.showInputBox({
       value: 'extension-mover',
-      placeHolder: "Input file name you want",
+      placeHolder: 'Please enter a new text file name!',
       validateInput: function (input: string): null | string {
-        return (/^[a-z0-9_.@()-]+/i).test(input) ? null : `The name of the txt file can't be that!`;
+        return (/^[A-z0-9_.@()-]+/i).test(input) ? null : 'Invalid text file name rule!';
       },
       ignoreFocusOut: true,
     });
@@ -21,7 +21,7 @@ export default async (param: ISaveParam): Promise<boolean | undefined> => {
     }
   
     const saveDirOption: vscode.OpenDialogOptions = {
-      openLabel: 'Save a file in this directory',
+      openLabel: 'Save file to this directory',
       canSelectFiles: false,
       canSelectFolders: true
     };
