@@ -2,10 +2,10 @@
 	"name": "vscode-extension-mover",
 	"displayName": "VSCode Extension Mover",
 	"description": "It helps to move vscode extensions to another workspace",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"publisher": "yewon63",
 	"engines": {
-		"vscode": "^1.52.1"
+		"vscode": "^1.38.0"
 	},
 	"categories": [
 		"Other"
