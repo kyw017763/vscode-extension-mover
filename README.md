@@ -7,7 +7,12 @@
 
 ### 1. Export all extensions (save as file or save to clipboard)
 
+> Get all vscode installation commands and enter them in other development environment!
+
 ### 2. Help deleting all extensions
 
+> Please delete the directory where vscode extension's files is located!(I only open it.)
+
+
 ## Extension Settings	
-All you have to do is following [this](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)
+All you have to do is this: [Install 'code' command in PATH](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)

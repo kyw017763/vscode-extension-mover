@@ -56,7 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
     const deletingHelpOptions: string[] = ["Yes", "No"];
     const result: string | undefined = await vscode.window.showInformationMessage('Would you like to delete all the vscode extensions?', ...deletingHelpOptions);
     if (result !== deletingHelpOptions[0]) {
-      return vscode.window.showInformationMessage(MESSAGE.DELETING_HELP_EXECUTION_ABORTED);
+      return vscode.window.showInformationMessage(MESSAGE.HELPING_DELETION_EXECUTION_ABORTED);
     }
 
     const osOption: string = osName();
@@ -69,7 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     const extensionPath = await vscode.window.showInputBox({
       value: defaultExtensionPath,
-      placeHolder: 'Please enter the vscode extension path and confirm! (If the input window is empty, the execution will be aborted!)',
+      placeHolder: `Enter the vscode extension path (default: ${defaultExtensionPath})`,
       ignoreFocusOut: true
     });
     if (!extensionPath) {
@@ -81,7 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
       return vscode.window.showErrorMessage(MESSAGE.IS_NOT_EXISTS);
     }
 
-    vscode.window.showInformationMessage('Please delete the vscode extension directory yourself!');
+    vscode.window.showInformationMessage('Please delete the directory yourself for accurate operation!');
 
     setTimeout(() => { open(extensionPath); }, 1000);
   });
