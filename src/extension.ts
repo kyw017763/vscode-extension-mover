@@ -13,17 +13,17 @@ export function activate(context: vscode.ExtensionContext) {
   const exporter = vscode.commands.registerCommand('extension.exporter', async () => {
     const osOption: string = osName();
 
-    let extensionListStr: string | boolean | undefined = await getExtensionList({ osOption });
-    if (!extensionListStr || typeof extensionListStr !== 'string') {
+    let extensions: string | null | undefined = await getExtensionList({ osOption });
+    if (!extensions || typeof extensions !== 'string') {
       return vscode.window.showErrorMessage(MESSAGE.EXPORTATION_EXECUTION_ABORTED);
     }
 
-    let extensionListArr: string[] = extensionListStr.split('\n');
-    extensionListArr = extensionListArr.slice(0, extensionListArr.length - 1);
-    const extensionCnt = extensionListArr.length;
+    let extensionList: string[] = extensions.split('\n');
+    extensionList = extensionList.slice(0, extensionList.length - 1);
+    const extensionCnt = extensionList.length;
 
     const commandList: string[] = [];
-    extensionListArr.forEach((elem: string) => commandList.push(`code --install-extension ${elem}${os.EOL}`));
+    extensionList.forEach((elem: string) => commandList.push(`code --install-extension ${elem}${os.EOL}`));
 
     const commandOptions: string[] = ['Save as File', 'Save to Clipboard'];
     const commandOption = await vscode.window.showQuickPick(commandOptions, {
@@ -36,26 +36,26 @@ export function activate(context: vscode.ExtensionContext) {
     }
     
     let exportResult: boolean | undefined = false;
-    let exportResultStr: string = '';
+    let exportStatus: string = '';
     if (commandOption === commandOptions[0]) {
       exportResult = await saveExtensionListAsFile({ commands: commandList.join('') });
-      exportResultStr = 'saved';
+      exportStatus = 'saved';
     } else if (commandOption === commandOptions[1]) {
       exportResult = await copyExtensionList({ osOption, commands: commandList.join('') });
-      exportResultStr = 'copied';
+      exportStatus = 'copied';
     }
 
     if (exportResult) {
-      return vscode.window.showInformationMessage(MESSAGE.EXPORTATION_EXECUTION_RESULT(extensionCnt, exportResultStr));
+      return vscode.window.showInformationMessage(MESSAGE.EXPORTATION_EXECUTION_RESULT(extensionCnt, exportStatus));
     }
 
     vscode.window.showErrorMessage(MESSAGE.EXPORTATION_EXECUTION_ABORTED);
   });
 
   const deletingHelper = vscode.commands.registerCommand('extension.deletingHelper', async () => {
-    const deletingHelpOption: string[] = ["Yes", "No"];
-    const result: string | undefined = await vscode.window.showInformationMessage('Would you like to delete all the vscode extensions?', ...deletingHelpOption);
-    if (result !== deletingHelpOption[0]) {
+    const deletingHelpOptions: string[] = ["Yes", "No"];
+    const result: string | undefined = await vscode.window.showInformationMessage('Would you like to delete all the vscode extensions?', ...deletingHelpOptions);
+    if (result !== deletingHelpOptions[0]) {
       return vscode.window.showInformationMessage(MESSAGE.DELETING_HELP_EXECUTION_ABORTED);
     }
 

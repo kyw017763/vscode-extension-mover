@@ -2,7 +2,7 @@ import * as cpPromise from 'child-process-promise';
 import { osType } from './osType';
 import { IGetParam } from '../ts/IParam';
 
-export default (async (param: IGetParam): Promise<string | boolean | undefined> => {
+export default (async (param: IGetParam): Promise<string | null | undefined> => {
   try {
     const { osOption } = param;
 
@@ -15,11 +15,11 @@ export default (async (param: IGetParam): Promise<string | boolean | undefined> 
   
     const result = await cpPromise.exec(command);
     if (result.stderr) {
-      return false;
+      return null;
     } else if (result.stdout) {
       return result.stdout;
     }
   } catch (err) {
-    return false;
+    return null;
   }
 });
