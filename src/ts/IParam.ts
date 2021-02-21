@@ -1,12 +1,12 @@
-export interface ICopyParam {
+export interface CopyParam {
     osOption: string;
     commands: string;
 }
 
-export interface IGetParam {
+export interface GetParam {
     osOption: string;
 }
 
-export interface ISaveParam {
+export interface SaveParam {
     commands: string;
 }

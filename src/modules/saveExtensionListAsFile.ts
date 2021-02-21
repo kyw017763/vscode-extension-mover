@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import fsSync from '../modules/fsSync';
-import { ISaveParam } from '../ts/IParam';
+import { SaveParam } from '../ts/IParam';
 
-export default async (param: ISaveParam): Promise<boolean | undefined> => {
+export default async (param: SaveParam): Promise<boolean | undefined> => {
   try {
     const { commands } = param;
 

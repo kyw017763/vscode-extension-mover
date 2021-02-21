@@ -1,9 +1,9 @@
 import cpPromise from 'child-process-promise';
 import Pbcopy from './pbcopy';
 import { osType } from './osType';
-import { ICopyParam } from '../ts/IParam';
+import { CopyParam } from '../ts/IParam';
 
-export default async (param: ICopyParam): Promise<boolean> => {
+export default async (param: CopyParam): Promise<boolean> => {
   try {
     const { osOption, commands } = param;
 

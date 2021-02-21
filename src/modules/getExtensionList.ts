@@ -1,8 +1,8 @@
 import * as cpPromise from 'child-process-promise';
 import { osType } from './osType';
-import { IGetParam } from '../ts/IParam';
+import { GetParam } from '../ts/IParam';
 
-export default (async (param: IGetParam): Promise<string | null | undefined> => {
+export default (async (param: GetParam): Promise<string | null | undefined> => {
   try {
     const { osOption } = param;
 
