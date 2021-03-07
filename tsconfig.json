@@ -5,7 +5,10 @@
 		"lib": ["es6"],
 		"outDir": "out",
 		"rootDir": "src",
-		"typeRoots" : ["node", "vscode"],
+		"typeRoots" : [
+			"node",
+			"vscode"
+		],
 		"moduleResolution": "node",
 		"sourceMap": true,
 		"strict": true,
@@ -13,6 +16,7 @@
 	},
 	"exclude": [
 		"node_modules",
-		".vscode-test"
+		".vscode-test",
+		"out"
 	]
 }
